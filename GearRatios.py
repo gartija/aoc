@@ -1,17 +1,16 @@
 
 import unicodedata
-def validateAdjacent(symbolsSet,row,col):
+def validateAdjacent(symbolsMap,row,col):
     pos = [f"{row-1,col-1}",f"{row-1,col}",f"{row-1,col+1}",f"{row,col-1}",f"{row,col}",f"{row,col+1}",f"{row+1,col-1}",f"{row+1,col}",f"{row+1,col+1}"]
     for curPos in pos:
-        if curPos in symbolsSet:
-            #print(curPos)
-            return True
-    return False
+        if curPos in symbolsMap:
+            return curPos
+    return None
 
 
 
 with open("gearratios.txt", "r") as f:
-    symbols = set()
+    symbols = dict({})
     currentline = f.readline()
     size = len(currentline) - 1
     matrix = [['0' for _ in range(size)] for _ in range(size)]
@@ -21,8 +20,8 @@ with open("gearratios.txt", "r") as f:
         for ch in currentline:
             if k < size:
                 matrix[i][k] = ch
-                if ch != "." and not ch.isdigit():
-                    symbols.add(f"{i,k}")
+                if ch == "*":
+                    symbols.update({f"{i,k}":0})
             k+=1
         i+=1
         currentline=f.readline()
@@ -31,27 +30,28 @@ with open("gearratios.txt", "r") as f:
     for line in matrix:
         k = 0
         curnum = "0"
-        isValid = False
+        gearPos = None
         for cell in line:
-            # if cell.isdigit():
-            #     curnum+=cell
-            # else: 
-            #     sum += int(curnum)
-            #     curnum = "0"
-            if cell.isdigit() and isValid:
+            if cell.isdigit() and gearPos is not None:
                 curnum+=cell
                 if k+1==size: 
-                    sum += int(curnum)    
-            elif cell.isdigit() and not isValid:
+                    if symbols.get(gearPos) == 0:
+                        symbols.update({gearPos:int(curnum)}) 
+                    else:
+                        sum += int(curnum)*symbols.get(gearPos)
+            elif cell.isdigit() and gearPos is None:
                 curnum+=cell
-                isValid = validateAdjacent(symbols,i,k)
-            elif not cell.isdigit() and isValid:
-                sum += int(curnum)
+                gearPos = validateAdjacent(symbols,i,k)
+            elif not cell.isdigit() and gearPos is not None:
+                if symbols.get(gearPos) == 0:
+                    symbols.update({gearPos:int(curnum)}) 
+                else:
+                    sum += int(curnum)*symbols.get(gearPos)
                 curnum = "0"
-                isValid = False
+                gearPos = None
             else:
                 curnum = "0"
-                isValid = False
+                gearPos = None
             k+=1
         i+=1
     print(sum)
