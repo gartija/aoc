@@ -1,6 +1,6 @@
 
-time = [49,78,79,80]
-distance = [298,1185,1066,1181]
+time = [49787980]
+distance = [298118510661181]
 totalNWays = 1
 
 for j, t in enumerate(time): 
