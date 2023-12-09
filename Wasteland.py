@@ -1,21 +1,12 @@
-import re
+import re, numpy
 
-with open("wasteland.txt", "r") as f:
-    instructions = f.readline().strip()
-    mapCoordinates = {}
-    
-    for line in f.readlines():
-        if len(line.strip())==0:
-            continue
-        strs = re.findall(r"([A-Z]{3}) = \(([A-Z]{3}), ([A-Z]{3})\)", line)
-        mapCoordinates.update({strs[0][0]:[strs[0][1],strs[0][2]]})
-    
-    currentPoint = "AAA"
+def calculateSteps(currentPoint,instructions,mapCoordinates)-> int: 
+    #currentPoint = "AAA"
     currentInstruction = 0
     steps = 0
     found = False
     while not found:
-        if currentPoint == "ZZZ":
+        if currentPoint[2] == "Z":
             found = True
         else: 
             instruction = instructions[currentInstruction]
@@ -27,7 +18,30 @@ with open("wasteland.txt", "r") as f:
             if currentInstruction == len(instructions):
                 currentInstruction = 0            
             steps +=1
-    print(steps)
+    return steps
+
+with open("wasteland.txt", "r") as f:
+    instructions = f.readline().strip()
+    mapCoordinates = {}
+    startingCoordinates = []
+    
+    for line in f.readlines():
+        if len(line.strip())==0:
+            continue
+        strs = re.findall(r"([A-Z]{3}) = \(([A-Z]{3}), ([A-Z]{3})\)", line)
+        mapCoordinates.update({strs[0][0]:[strs[0][1],strs[0][2]]})
+        start = re.findall(r"([A-Z]{2}A) = \([A-Z]{3}, [A-Z]{3}\)", line)
+        if len(start)==1:
+            startingCoordinates.append(start[0])
+
+    lcm = 1
+    for k in startingCoordinates:
+        steps = calculateSteps(k,instructions,mapCoordinates)
+        lcm = numpy.lcm(steps,lcm)
+    print(lcm)
+
+
+    
 
     
     
