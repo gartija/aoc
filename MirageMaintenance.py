@@ -9,9 +9,9 @@ def extrapolate(arr) -> int:
             allZeroes = False
         previousValue = item
     if allZeroes:
-        return arr[len(arr)-1]
+        return arr[0]
     else: 
-        return arr[len(arr)-1]+extrapolate(newarr)
+        return arr[0]-extrapolate(newarr)
 
 with open("miragemaintenance.txt", "r") as f:
     lines = f.readlines()
