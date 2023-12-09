@@ -36,8 +36,5 @@ with open("camelcards.txt", "r") as f:
     totalScore = 0
     for i, s in enumerate(scores):
         totalScore += (i+1)*int(s[6])
-        print(i)
-        print(s)
-        print(totalScore)
     print(totalScore)
     
