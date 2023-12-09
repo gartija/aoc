@@ -55,7 +55,6 @@ with open("camelcards.txt", "r") as f:
                        cardvalues.get(cardsBet[0][4]),
                        cardsBet[1]))
     scores.sort(key=lambda x: (x[0], x[1], x[2], x[3], x[4], x[5]))
-    print(scores)
     totalScore = 0
     for i, s in enumerate(scores):
         totalScore += (i+1)*int(s[6])
